@@ -1,6 +1,6 @@
 
  Run the server
- - php -S localhost:8000 project/api.php 
+ - php -S localhost:8000 api.php 
 
  System requirements
  - This was created using PHP 7.4.4
