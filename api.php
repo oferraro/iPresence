@@ -80,18 +80,17 @@ if ($quotesLimit && $quotesLimit >= 1 && $quotesLimit <= 10) {
     $quotesService = new Quotes();
     $author = array_pop($url->segments);
 
-    echo "<pre>";
     // Just for testing purposes, use this uid, in real cases it should be a client api key
     $uid = md5($_SERVER['HTTP_USER_AGENT'] .  $_SERVER['REMOTE_ADDR']);
 
     $db = new SqliteService();
-    // $db->rebuildTables();
+    // $db->rebuildTables(); // this is useful in test cases to delete the databases
     if ($cachedQuotes = $db->getLastUserConnection($uid, $requestUri)) { // Get cached quotes
         http_response_code(200);
         header('Content-Type: application/json');
         echo json_encode($cachedQuotes);
 
-    } else { // If no cached quotes get from a source (mock, api, etc)
+    } else { // If no cached quotes get from a source (mock, api url, etc)
         $quotesService->setQuotes('mock');
         $quotesService->filterQuotes($quotesLimit, $author);
 
@@ -99,12 +98,8 @@ if ($quotesLimit && $quotesLimit >= 1 && $quotesLimit <= 10) {
         $db->saveRequestQuotes($quotesService->quotes, $thisRequest);
         $quotesService->responseQuotes();
     }
-
-    //  Change this for use a real URL
+    //  Change this for use a real URL instead of mock
     //  $quotesService->setQuotes(Quotes::QUOTES_FROM_URL, 'https://jsonplaceholder.typicode.com/posts');
-
-    // Since data came from source save it in cache
-
 
 } else {
     throw new Exception('Quotes limit has to be between 1 and 10');
