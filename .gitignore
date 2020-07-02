@@ -1,0 +1,5 @@
+.idea
+SQLite
+vendor
+test.db
+
